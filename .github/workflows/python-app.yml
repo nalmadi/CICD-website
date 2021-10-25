@@ -42,7 +42,4 @@ jobs:
         HEROKU_API_TOKEN: ${{ secrets.HEROKU_API_TOKEN }}
         HEROKI_APP_NAME: ${{ secrets.HEROKI_APP_NAME }}
         heroku_email: "nsalmadi@colby.edu"
-      if: github.ref == 'refs/head/main' && job.status == 'success'
-      run: |
-        git remote add Heroku https://Heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git
-        git push heroku HEAD:main -f
+
