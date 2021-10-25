@@ -1,36 +1,92 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+- create repo
+- clone repo
+- navigate to new repo
+- create new venv
+- myvenv\Scripts\activate
+- pip install flask pytest
+- pip freeze > requirements.txt
+- mkdir src
+- cd src
+- make file app.py
+- write:
 
-name: Python application
+#############
+from flask import Flask
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+app = Flask(__name__)
 
-jobs:
-  build:
 
-    runs-on: ubuntu-latest
+@app.route("/")
+def index():
+	return "hello, World!"
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-    - name: Install dependencies
+
+if __name__ == "__main__":
+	app.run() 
+##############
+
+
+- python app.py
+- visit http://127.0.0.1:5000/
+- ctrl + C
+- cd ..
+- mkdir tests
+- cd tests
+- make file test_app.py
+- write:
+#############
+from app import index
+
+
+def test_index():
+	assert index() == "hello, world!"
+#############
+
+
+- add a file .gitignore
+- write in it:
+##############
+myvenv/
+__pycache__/
+##############
+
+
+- git add all files 
+- git commit -m "initial commit"
+- go to actions
+- select Python application
+- review action
+- check auto build details
+- make test fail and push to repo and see build in actions
+- review DevOps loop and think about deployment
+- go to Heroku (a platform as a service)
+- install Heroku CLI
+- Heroku login
+- heroku create # to create a new application
+- we want to automate deployment to Heroku servers
+- go to https://devcenter.heroku.com/articles/platform-api-quickstart
+- heroku authorizations:create
+- how to use token without making it public?
+- go to github settings secrets
+- click on add new secret
+- add HEROKU_API_TOKEN and HEROKU_APP_NAME (salty-river-43291) to secrets
+- go to yaml workflow action
+- add:
+
+
+    - name: Deploy to Heroku
+      env:
+        HEROKU_API_TOKEN: ${{ secrets.HEROKU_API_TOKEN }}
+        HEROKI_APP_NAME: ${{ secrets.HEROKI_APP_NAME }}
+      if: github.ref == 'refs/head/main' && job.status == 'success'
       run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
+        git remote add Heroku https://Heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git
+        git push heroku HEAD:main -f
+
+
+- create Procfile
+- add:
+  web gunicorn --pythonpath . app:app
+
+- create runtime.txt
+python-3.7.6
