@@ -37,11 +37,15 @@ jobs:
       run: |
         pytest
     - name: Deploy to Heroku
-    - uses: akhileshns/heroku-deploy@v3.0.0
+      # You may pin to the exact commit or the version.
+      # uses: AkhileshNS/heroku-deploy@79ef2ae4ff9b897010907016b268fd0f88561820
+      uses: AkhileshNS/heroku-deploy@v3.12.12
       with:
-        HEROKU_API_TOKEN: ${{ secrets.HEROKU_API_TOKEN }}
-        HEROKI_APP_NAME: ${{ secrets.HEROKI_APP_NAME }}
-      if: github.ref == 'refs/head/main' && job.status == 'success'
-      run: |
-        git remote add Heroku https://Heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git
-        git push heroku HEAD:main -f
+        # This will be used for authentication. You can find it in your heroku homepage account settings
+        heroku_api_key: ${{ secrets.HEROKU_API_TOKEN }}
+        # Email that you use with heroku
+        heroku_email: "nsalmadi@colby.edu"
+        # The appname to use for deploying/updating
+        heroku_app_name: ${{ secrets.HEROKI_APP_NAME }}
+        # Set this to true if you don't want to automatically create the Heroku app
+        dontautocreate: true # optional, default is false
