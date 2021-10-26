@@ -1,4 +1,4 @@
-from app import index
+from app import about
 
 
 def test_about():
