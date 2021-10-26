@@ -37,6 +37,6 @@ jobs:
           # requirements filepath for project
           requirements-file: requirements.txt # optional, default is requirements.txt
           # fail if any single file coverage is less than threshold
-          cov-threshold-single: 80 # optional, default is 0
+          cov-threshold-single: 100 # optional, default is 0
           # fail if the total coverage is less than threshold
-          cov-threshold-total: 80 # optional, default is 0
+          cov-threshold-total: 100 # optional, default is 0
