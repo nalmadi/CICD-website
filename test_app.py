@@ -1,5 +1,5 @@
 from app import index
 
 
-def test_index():
-	assert index() == "hello, World!"
+def test_about():
+	assert about() == "About us: Naser and the cool kids from CS321"
