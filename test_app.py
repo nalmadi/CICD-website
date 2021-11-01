@@ -8,11 +8,29 @@ website_path = "https://salty-river-43291.herokuapp.com/"
 def test_about():
 	assert about() == "About us: Naser and the cool kids from CS321"
 
+	client = app.test_client()
+	response = client.get("/about")
+	assert response.status_code == 200
+
 
 def test_add():
-	url = website_path + '/add'
-	myobj = {'visitor': 'New person'}
 
-	webpage = requests.post(url, data = myobj)
+	client = app.test_client()
+	url = '/add'
+	data = {'visitor': 'New person'}
 
-	assert "New person" in webpage.text
+	response = client.post(url, data=data)
+	assert response.status_code == 302 # redirect
+
+	response = client.get("/")
+	webpage_text = response.get_data()
+	assert b'New person' in response.data
+
+
+
+	# url = website_path + '/add'
+	# myobj = {'visitor': 'New person'}
+
+	# webpage = requests.post(url, data = myobj)
+
+	# assert "New person" in webpage.text
